@@ -32,6 +32,8 @@ import { sound } from "./utils/audio";
 import { GamerConsole } from "./components/GamerConsole";
 import { AgvaanQuiz } from "./components/AgvaanQuiz";
 import { SpaceCinema } from "./components/SpaceCinema";
+import { IdolCoach } from "./components/IdolCoach";
+import { MeAIChat } from "./components/MeAIChat";
 import { GuestbookEntry, ThemeName, ThemeConfig } from "./types";
 
 // Theme designs configuration mapped to dynamic Tailwind style injection
@@ -110,7 +112,7 @@ const DEFAULT_GUESTBOOK: GuestbookEntry[] = [
 export default function App() {
   const [lang, setLang] = useState<"mn" | "en">("mn");
   const [theme, setTheme] = useState<ThemeName>("cyber");
-  const [activeTab, setActiveTab] = useState<"games" | "hobbies" | "creators" | "school" | "media">("games");
+  const [activeTab, setActiveTab] = useState<"games" | "hobbies" | "creators" | "school" | "media" | "idol">("games");
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
   
   // Custom time display parameters
@@ -517,6 +519,7 @@ export default function App() {
               { id: "hobbies", label: lang === "mn" ? "ГРҮҮВ & ХОББИ" : "BBALL COURT", icon: Dribbble },
               { id: "creators", label: lang === "mn" ? "ДУРТАЙ ЗҮЙЛС" : "BTS & GREMIX", icon: Music },
               { id: "media", label: lang === "mn" ? "МУЗЫК & КИНО" : "SPACE CINEMA", icon: Tv },
+              { id: "idol", label: lang === "mn" ? "🤖 ШҮТЭЭН" : "🤖 MY IDOL", icon: Award },
               { id: "school", label: lang === "mn" ? "ИРЭЭДҮЙ-86" : "STATION I-86", icon: BookOpen },
             ].map((tab) => {
               const isActive = activeTab === tab.id;
@@ -525,7 +528,7 @@ export default function App() {
                 <button
                   key={tab.id}
                   onClick={() => {
-                    setActiveTab(tab.id as "games" | "hobbies" | "creators" | "school" | "media");
+                    setActiveTab(tab.id as "games" | "hobbies" | "creators" | "school" | "media" | "idol");
                     if (soundEnabled) sound.playBeep();
                   }}
                   className={`flex-1 min-w-[120px] py-3 px-3 rounded-xl font-mono text-xs font-bold uppercase transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer ${
@@ -961,6 +964,19 @@ export default function App() {
                 </motion.div>
               )}
 
+              {/* TAB 6: IDOL COACH CHAT */}
+              {activeTab === "idol" && (
+                <motion.div
+                  key="idol-panel"
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  className="w-full"
+                >
+                  <IdolCoach lang={lang} soundEnabled={soundEnabled} />
+                </motion.div>
+              )}
+
             </AnimatePresence>
           </div>
 
@@ -1116,6 +1132,9 @@ export default function App() {
           <a href="#guestbook" className="hover:text-[#6FFF00] transition-colors">{lang === "mn" ? "СЭТГЭГДЭЛ" : "SIGNAL_BOX"}</a>
         </div>
       </footer>
+
+      {/* FLOATING MESSENGER HELP CHATBOT */}
+      <MeAIChat lang={lang} soundEnabled={soundEnabled} />
     </div>
   );
 }
