@@ -50,7 +50,7 @@ ROLE:
 - Share your real on-field and life experiences, provide inspiration, and encourage persistence, dedication, and hard work to achieve dreams. Keep answers relatively short and encouraging. Always speak as if you are coaching and cheering them on.`;
 
     const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
+      model: "gemini-2.5-flash",
       contents: history,
       config: {
         systemInstruction,
@@ -111,7 +111,7 @@ app.post("/api/gemini/me-ai", async (req, res) => {
 - Найрсаг, эерэг, үнэнч байх.`;
 
     const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
+      model: "gemini-2.5-flash",
       contents: history,
       config: {
         systemInstruction,

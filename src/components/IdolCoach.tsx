@@ -67,12 +67,19 @@ export function IdolCoach({ lang, soundEnabled }: IdolCoachProps) {
         body: JSON.stringify({ history: historyPayload }),
       });
 
-      if (!response.ok) {
-        throw new Error("Хост серверээс хариу авахад алдаа гарлаа.");
+      let data;
+      try {
+        data = await response.json();
+      } catch (e) {
+        // Response was not JSON
       }
 
-      const data = await response.json();
-      if (data.error) {
+      if (!response.ok) {
+        const fallbackMsg = lang === "mn" ? "Хост серверээс хариу авахад алдаа гарлаа." : "Failed to get a response from the host server.";
+        throw new Error(data?.error || fallbackMsg);
+      }
+
+      if (data?.error) {
         throw new Error(data.error);
       }
 
@@ -83,7 +90,7 @@ export function IdolCoach({ lang, soundEnabled }: IdolCoachProps) {
     } catch (err: any) {
       console.error(err);
       if (soundEnabled) sound.playFail();
-      setErrorMsg(lang === "mn" ? "Алдаа: Холболт тасарлаа. Дахин оролдоно уу." : "Error: Connection lost. Please try again.");
+      setErrorMsg(err.message || (lang === "mn" ? "Алдаа: Холболт тасарлаа. Дахин оролдоно уу." : "Error: Connection lost. Please try again."));
     } finally {
       setIsLoading(false);
     }

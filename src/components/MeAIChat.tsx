@@ -74,12 +74,19 @@ export function MeAIChat({ lang, soundEnabled }: MeAIChatProps) {
         body: JSON.stringify({ history: historyPayload }),
       });
 
-      if (!response.ok) {
-        throw new Error("Алдаа гарлаа. Сервер холбогдсонгүй.");
+      let data;
+      try {
+        data = await response.json();
+      } catch (e) {
+        // Response was not JSON
       }
 
-      const data = await response.json();
-      if (data.error) {
+      if (!response.ok) {
+        const fallbackMsg = lang === "mn" ? "Сүлжээний алдаа гарлаа. Сервер холбогдсонгүй." : "Network error. Try asking again.";
+        throw new Error(data?.error || fallbackMsg);
+      }
+
+      if (data?.error) {
         throw new Error(data.error);
       }
 
@@ -90,7 +97,7 @@ export function MeAIChat({ lang, soundEnabled }: MeAIChatProps) {
     } catch (err: any) {
       console.error(err);
       if (soundEnabled) sound.playFail();
-      setErrorMsg(lang === "mn" ? "Сүлжээний алдаа гарлаа. Дахин асууна уу." : "Network error. Try asking again.");
+      setErrorMsg(err.message || (lang === "mn" ? "Сүлжээний алдаа гарлаа. Дахин асууна уу." : "Network error. Try asking again."));
     } finally {
       setIsLoading(false);
     }
