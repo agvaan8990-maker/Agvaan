@@ -34,6 +34,7 @@ import { AgvaanQuiz } from "./components/AgvaanQuiz";
 import { SpaceCinema } from "./components/SpaceCinema";
 import { IdolCoach } from "./components/IdolCoach";
 import { MeAIChat } from "./components/MeAIChat";
+import { EmojiAnimeGuesser } from "./components/EmojiAnimeGuesser";
 import { GuestbookEntry, ThemeName, ThemeConfig } from "./types";
 
 // Theme designs configuration mapped to dynamic Tailwind style injection
@@ -594,47 +595,10 @@ export default function App() {
                           </motion.div>
                         )}
 
-                        {/* Result notification bubble */}
-                        <AnimatePresence>
-                          {isSwish !== null && (
-                            <motion.div
-                              initial={{ opacity: 0, scale: 0.5 }}
-                              animate={{ opacity: 1, scale: 1 }}
-                              exit={{ opacity: 0 }}
-                              className={`absolute top-1/3 left-1/2 -translate-x-1/2 px-4 py-2 rounded-xl border font-bold text-center text-xs uppercase shadow-xl ${
-                                isSwish
-                                  ? "bg-neon/90 border-[#6FFF00] text-space-bg"
-                                  : "bg-red-500/90 border-red-400 text-cream"
-                              }`}
-                            >
-                              {isSwish 
-                                ? (lang === "mn" ? "ОРОН ХӨӨРЛӨӨ! +1" : "SPLASH! SWISH! +1") 
-                                : (lang === "mn" ? "АЛДЛАА! ДАХИН ОРОЛДООД!" : "MISSED THE RIM!")}
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-
                         {/* Static goal marker */}
                         <div className="absolute top-[80px] right-[40px] w-14 h-14 border-4 border-dashed border-[#6FFF00]/50 rounded-full flex items-center justify-center">
                           <span className="text-[10px] text-white/50 font-bold uppercase">RIM</span>
                         </div>
-                      </div>
-
-                      <div className="flex justify-between items-center bg-white/[0.02] border border-white/5 p-4 rounded-xl">
-                        <div>
-                          <span className="text-[10px] text-cream/40 block">SCORE COUNTER:</span>
-                          <span className="text-xl font-bold font-mono text-neon">
-                            🏀 {bballHoops} {lang === "mn" ? "Оноо" : "Hoops"}
-                          </span>
-                        </div>
-                        
-                        <button
-                          onClick={shootBall}
-                          disabled={bballAnim}
-                          className="px-6 py-2.5 rounded-xl bg-neon text-space-bg hover:bg-neon/90 font-bold font-mono text-xs uppercase tracking-widest cursor-pointer transition-all disabled:opacity-40"
-                        >
-                          {bballAnim ? (lang === "mn" ? "ХӨӨРЛӨӨС..." : "SHOT ALIGNED...") : (lang === "mn" ? "БӨМБӨГ ШИДЭХ" : "THROW BASKETBAlL")}
-                        </button>
                       </div>
                     </div>
 
@@ -642,185 +606,176 @@ export default function App() {
                     <div className="md:col-span-5 flex flex-col gap-4">
                       <span className="text-neon text-[10px] font-bold tracking-widest uppercase block">[ FIELD ACCESS PROTOCOL ]</span>
                       <h3 className="font-grotesk text-2xl text-cream uppercase leading-none">
-                        {lang === "mn" ? "САГСАН БӨМБӨГ" : "COSMIC COURT DRIlls"}
+                        {lang === "mn" ? "САГСАН БӨМБӨГ" : "COSMIC COURT DRILLS"}
                       </h3>
                       
                       <p className="text-xs sm:text-[13px] text-cream/75 leading-relaxed uppercase">
                         {lang === "mn"
-                          ? "Би багаасаа л спортод маш сонирхолтой байсан бөгөөд чөлөөт цагаараа талбайд сагс тоглож бөмбөг шидэх дуртай. Энэ бол миний хамгийн хайртай спорт хөгжил юм!"
-                          : "My ultimate active outlet. Keeps my reflexes tuned and spirits high. Whenever the homework session completes, I hit the neighborhood hoops."}
+                          ? "Би багаасаа л спортод маш сонирхолтой байсан бөгөөд сагсан бөмбөг тоглох дуртай. Энэ нь намайг эрч хүчтэй, хурдан шаламгай байхад тусалдаг."
+                          : "Basketball is a core pillar of my layout. Throwing high arcs, studying space positioning, and engineering court coordination with friends."}
                       </p>
-
-                      <div className="border-t border-white/5 pt-3 mt-1 flex flex-col gap-1 text-[11px] text-cream/50">
-                        <div>CLASSIC RECOGNITION: <span className="text-cream font-bold uppercase">IREEDUI POINT GUARD</span></div>
-                        <div>ACTIVE DAYS: <span className="text-cream font-bold uppercase">WEEKENDS & AFTERNOON</span></div>
-                      </div>
                     </div>
-
                   </div>
-                </motion.div>
-              )}
 
-              {/* TAB 3: ANIME, BTS, GREMIX DECK */}
-              {activeTab === "creators" && (
-                <motion.div
-                  key="creators-panel"
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -15 }}
-                  className="w-full flex flex-col gap-8"
-                >
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full items-stretch">
                     
-                    {/* One Piece Pirate Ship Segment */}
-                    <div className="liquid-glass rounded-[28px] p-5 border border-white/10 flex flex-col justify-between">
-                      <div>
-                        <div className="flex justify-between items-start mb-3">
-                          <span className="px-2 py-0.5 rounded text-[9px] font-bold bg-[#b724ff]/10 text-[#b724ff] border border-[#b724ff]/20 uppercase">
-                            ONE PIECE ANIME
-                          </span>
-                          <span className="text-[10px] text-cream/40 uppercase font-mono">SECTOR STRAW HAT</span>
-                        </div>
-                        
-                        <div className="relative aspect-video w-full rounded-xl overflow-hidden bg-black/40 border border-white/5 mb-4">
-                          <img
-                            src={IMAGES.onePiece}
-                            alt="Straw Hat Ship"
-                            className="w-full h-full object-cover"
-                            referrerPolicy="no-referrer"
-                          />
-                        </div>
-
-                        <h4 className="font-grotesk text-xl text-cream uppercase tracking-wide leading-none mb-2">
-                          {lang === "mn" ? "МИНИЙ ДУРТАЙ АНИМЭ" : "MY FAVOURITE ANIME"}
-                        </h4>
-                        <p className="text-xs text-cream/70 leading-relaxed uppercase mb-4">
-                          {lang === "mn" 
-                            ? "Ван пис бол адал явдалт, хязгааргүй мөрөөдөх сэтгэлгээг надад заасан шилдэг бүтээл юм. Би Луффи болон түүний багийнхны уян хатан занд маш их дуртай."
-                            : "Following Monkey D. Luffy across mystical tides. A legendary tale of friendship, resilience, and finding true freedom on the sea."}
-                        </p>
-                      </div>
-
-                      {/* Interactive Selection box */}
-                      <div className="border-t border-white/5 pt-3.5 flex items-center justify-between text-[11px] font-mono">
-                        <span className="text-cream/50 uppercase">FAV CHARACTER:</span>
-                        <div className="flex gap-1.5">
-                          {["Luffy", "Zoro", "Sanji"].map((crew) => (
-                            <button
-                              key={crew}
-                              onClick={() => {
-                                setSelectedCrew(crew);
-                                if (soundEnabled) sound.playBeep();
-                              }}
-                              className={`px-2 py-1 rounded text-[10px] font-bold uppercase cursor-pointer ${
-                                selectedCrew === crew 
-                                  ? "bg-purple-500 text-white" 
-                                  : "bg-white/5 text-white/50 hover:bg-white/10"
-                              }`}
-                            >
-                              {crew}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
+                    {/* Emoji Guessing Game - Left Column (50% Width on Large Screens) */}
+                    <div className="lg:col-span-6 flex flex-col h-full">
+                      <EmojiAnimeGuesser lang={lang} soundEnabled={soundEnabled} />
                     </div>
 
-                    {/* BTS Electronic Concert Player */}
-                    <div className="liquid-glass rounded-[28px] p-5 border border-white/10 flex flex-col justify-between">
-                      <div>
-                        <div className="flex justify-between items-start mb-3">
-                          <span className="px-2 py-0.5 rounded text-[9px] font-bold bg-[#6FFF00]/10 text-[#6FFF00] border border-[#6FFF00]/20 uppercase">
-                            BTS ARMY CORE
-                          </span>
-                          <span className="text-[10px] text-cream/40 uppercase font-mono animate-pulse">LIGHTSTICK ONLINE</span>
-                        </div>
-
-                        <div className="relative aspect-video w-full rounded-xl overflow-hidden bg-black/40 border border-white/5 mb-4">
-                          <img
-                            src={IMAGES.btsConcert}
-                            alt="BTS Stage"
-                            className="w-full h-full object-cover transition-opacity duration-300"
-                            style={{ filter: `drop-shadow(0 0 10px ${armyBombColor}30)` }}
-                            referrerPolicy="no-referrer"
-                          />
-                          
-                          {/* Simulated Lightstick dynamic glow overlay */}
-                          <div 
-                            className="absolute inset-0 transition-all duration-700 mix-blend-color opacity-35"
-                            style={{ backgroundColor: armyBombColor }}
-                          />
-
-                          {/* Music equalizer bars */}
-                          <div className="absolute bottom-3 right-3 flex items-end gap-1.5 p-2 rounded-lg bg-black/70 backdrop-blur-md">
-                            {[1.5, 2.3, 1.1, 2.7, 0.8, 1.9].map((dur, i) => (
-                              <div
-                                key={i}
-                                className="w-1.5 rounded-full"
-                                style={{
-                                  backgroundColor: armyBombColor,
-                                  height: concertMode ? "24px" : "8px",
-                                  animation: concertMode ? `eq-anim ${dur}s infinite alternate ease-in-out` : "none"
-                                }}
-                              />
-                            ))}
+                    {/* Stacked Cards - Right Column (50% Width on Large Screens) */}
+                    <div className="lg:col-span-6 flex flex-col gap-6 justify-between">
+{/* One Piece Pirate Ship Segment */}
+                      <div className="liquid-glass rounded-[28px] p-6 border border-white/10 flex flex-col justify-between flex-1">
+                        <div>
+                          <div className="flex justify-between items-start mb-3">
+                            <span className="px-2 py-0.5 rounded text-[9px] font-bold bg-[#b724ff]/10 text-[#b724ff] border border-[#b724ff]/20 uppercase">
+                              ONE PIECE ANIME
+                            </span>
+                            <span className="text-[10px] text-cream/40 uppercase font-mono">SECTOR STRAW HAT</span>
                           </div>
+                          
+                          <div className="relative aspect-video w-full rounded-xl overflow-hidden bg-black/40 border border-white/5 mb-4">
+                            <img
+                              src={IMAGES.onePiece}
+                              alt="Straw Hat Ship"
+                              className="w-full h-full object-cover"
+                              referrerPolicy="no-referrer"
+                            />
+                          </div>
+
+                          <h4 className="font-grotesk text-xl text-cream uppercase tracking-wide leading-none mb-2">
+                            {lang === "mn" ? "МИНИЙ ДУРТАЙ АНИМЭ" : "MY FAVOURITE ANIME"}
+                          </h4>
+                          <p className="text-xs text-cream/70 leading-relaxed uppercase mb-4">
+                            {lang === "mn" 
+                              ? "Ван пис бол адал явдалт, хязгааргүй мөрөөдөх сэтгэлгээг надад заасан шилдэг бүтээл юм. Би Луффи болон түүний багийнхны уян хатан занд маш их дуртай."
+                              : "Following Monkey D. Luffy across mystical tides. A legendary tale of friendship, resilience, and finding true freedom on the sea."}
+                          </p>
                         </div>
 
-                        <h4 className="font-grotesk text-xl text-cream uppercase tracking-wide leading-none mb-2">
-                          {lang === "mn" ? "МИНИЙ ДУРТАЙ ХАМТЛАГ" : "MY FAVOURITE BAND"}
-                        </h4>
-                        <p className="text-xs text-cream/70 leading-relaxed uppercase mb-4">
-                          {lang === "mn" 
-                            ? "БТС хамтлаг бол К-Попын хаад юм! Тэдний Dynamite болон Butter дуунууд ямар ч үед миний энергийг дээд цэгт хүргэж чаддаг."
-                            : "Dynamite, Permission to Dance, Butter... Energetic songs that fuel my gaming setups and homework focus. Light up the ARMY bomb!"}
-                        </p>
-                      </div>
-
-                      {/* Army Bomb controller board */}
-                      <div className="border-t border-white/5 pt-3 flex flex-col gap-2">
-                        <div className="flex justify-between items-center text-[10px] font-mono text-cream/50 uppercase">
-                          <span>ARMY BOMB COLOR:</span>
-                          <span>{concertMode ? "PLAYING AUDIO..." : "IDLE"}</span>
-                        </div>
-                        
-                        <div className="flex justify-between items-center">
-                          <div className="flex gap-2">
-                            {["#a855f7", "#ff007f", "#6FFF00", "#00ffff"].map((col) => (
+                        {/* Interactive Selection box */}
+                        <div className="border-t border-white/5 pt-3.5 flex items-center justify-between text-[11px] font-mono">
+                          <span className="text-cream/50 uppercase">FAV CHARACTER:</span>
+                          <div className="flex gap-1.5">
+                            {["Luffy", "Zoro", "Sanji"].map((crew) => (
                               <button
-                                key={col}
+                                key={crew}
                                 onClick={() => {
-                                  setArmyBombColor(col);
+                                  setSelectedCrew(crew);
                                   if (soundEnabled) sound.playBeep();
                                 }}
-                                className="w-6 h-6 rounded-full border border-white/10 relative transition-transform hover:scale-110 cursor-pointer"
-                                style={{ backgroundColor: col }}
+                                className={`px-2 py-1 rounded text-[10px] font-bold uppercase cursor-pointer ${
+                                  selectedCrew === crew 
+                                    ? "bg-purple-500 text-white" 
+                                    : "bg-white/5 text-white/50 hover:bg-white/10"
+                                }`}
                               >
-                                {armyBombColor === col && (
-                                  <span className="absolute inset-1.5 rounded-full bg-white ring-1 ring-black" />
-                                )}
+                                {crew}
                               </button>
                             ))}
                           </div>
+                        </div>
+                      </div>
 
-                          <button
-                            onClick={() => {
-                              setConcertMode(!concertMode);
-                              if (soundEnabled) {
-                                if (!concertMode) {
-                                  sound.playCosmicTune();
-                                } else {
-                                  sound.playBeep();
+                      {/* BTS Electronic Concert Player */}
+                      <div className="liquid-glass rounded-[28px] p-6 border border-white/10 flex flex-col justify-between flex-1">
+                        <div>
+                          <div className="flex justify-between items-start mb-3">
+                            <span className="px-2 py-0.5 rounded text-[9px] font-bold bg-[#6FFF00]/10 text-[#6FFF00] border border-[#6FFF00]/20 uppercase">
+                              BTS ARMY CORE
+                            </span>
+                            <span className="text-[10px] text-cream/40 uppercase font-mono animate-pulse">LIGHTSTICK ONLINE</span>
+                          </div>
+
+                          <div className="relative aspect-video w-full rounded-xl overflow-hidden bg-black/40 border border-white/5 mb-4">
+                            <img
+                              src={IMAGES.btsConcert}
+                              alt="BTS Stage"
+                              className="w-full h-full object-cover transition-opacity duration-300"
+                              style={{ filter: `drop-shadow(0 0 10px ${armyBombColor}30)` }}
+                              referrerPolicy="no-referrer"
+                            />
+                            
+                            {/* Simulated Lightstick dynamic glow overlay */}
+                            <div 
+                              className="absolute inset-0 transition-all duration-700 mix-blend-color opacity-35"
+                              style={{ backgroundColor: armyBombColor }}
+                            />
+
+                            {/* Music equalizer bars */}
+                            <div className="absolute bottom-3 right-3 flex items-end gap-1.5 p-2 rounded-lg bg-black/70 backdrop-blur-md">
+                              {[1.5, 2.3, 1.1, 2.7, 0.8, 1.9].map((dur, i) => (
+                                <div
+                                  key={i}
+                                  className="w-1.5 rounded-full"
+                                  style={{
+                                    backgroundColor: armyBombColor,
+                                    height: concertMode ? "24px" : "8px",
+                                    animation: concertMode ? `eq-anim ${dur}s infinite alternate ease-in-out` : "none"
+                                  }}
+                                />
+                              ))}
+                            </div>
+                          </div>
+
+                          <h4 className="font-grotesk text-xl text-cream uppercase tracking-wide leading-none mb-2">
+                            {lang === "mn" ? "МИНИЙ ДУРТАЙ ХАМТЛАГ" : "MY FAVOURITE BAND"}
+                          </h4>
+                          <p className="text-xs text-cream/70 leading-relaxed uppercase mb-4">
+                            {lang === "mn" 
+                              ? "БТС хамтлаг бол К-Попын хаад юм! Тэдний Dynamite болон Butter дуунууд ямар ч үед миний энергийг дээд цэгт хүргэж чаддаг."
+                              : "Dynamite, Permission to Dance, Butter... Energetic songs that fuel my gaming setups and homework focus. Light up the ARMY bomb!"}
+                          </p>
+                        </div>
+
+                        {/* Army Bomb controller board */}
+                        <div className="border-t border-white/5 pt-3 flex flex-col gap-2">
+                          <div className="flex justify-between items-center text-[10px] font-mono text-cream/50 uppercase">
+                            <span>ARMY BOMB COLOR:</span>
+                            <span>{concertMode ? "PLAYING AUDIO..." : "IDLE"}</span>
+                          </div>
+                          
+                          <div className="flex justify-between items-center">
+                            <div className="flex gap-2">
+                              {["#a855f7", "#ff007f", "#6FFF00", "#00ffff"].map((col) => (
+                                <button
+                                  key={col}
+                                  onClick={() => {
+                                    setArmyBombColor(col);
+                                    if (soundEnabled) sound.playBeep();
+                                  }}
+                                  className="w-6 h-6 rounded-full border border-white/10 relative transition-transform hover:scale-110 cursor-pointer"
+                                  style={{ backgroundColor: col }}
+                                >
+                                  {armyBombColor === col && (
+                                    <span className="absolute inset-1.5 rounded-full bg-white ring-1 ring-black" />
+                                  )}
+                                </button>
+                              ))}
+                            </div>
+
+                            <button
+                              onClick={() => {
+                                setConcertMode(!concertMode);
+                                if (soundEnabled) {
+                                  if (!concertMode) {
+                                    sound.playCosmicTune();
+                                  } else {
+                                    sound.playBeep();
+                                  }
                                 }
-                              }
-                            }}
-                            className={`px-3 py-1.5 rounded text-[10px] font-bold uppercase transition-all cursor-pointer ${
-                              concertMode 
-                                ? "bg-neon text-space-bg animate-pulse" 
-                                : "bg-white/5 text-white/70 hover:bg-white/10"
-                            }`}
-                          >
-                            🎵 {concertMode ? (lang === "mn" ? "ЗОГСООХ" : "MUT_AUDIO") : (lang === "mn" ? "ДУУ СОНСОХ" : "SYNTH_TUNE")}
-                          </button>
+                              }}
+                              className={`px-3 py-1.5 rounded text-[10px] font-bold uppercase transition-all cursor-pointer ${
+                                concertMode 
+                                  ? "bg-neon text-space-bg animate-pulse" 
+                                  : "bg-white/5 text-white/70 hover:bg-white/10"
+                              }`}
+                            >
+                              🎵 {concertMode ? (lang === "mn" ? "ЗОГСООХ" : "MUT_AUDIO") : (lang === "mn" ? "ДУУ СОНСОХ" : "SYNTH_TUNE")}
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -988,7 +943,7 @@ export default function App() {
                 {lang === "mn" ? "ТА АГВААНЫГ ХЭР САЙН МЭДЭХ ВЭ?" : "HOW WELL DO YOU KNOW AGVAAN?"}
               </h3>
             </div>
-            <AgvaanQuiz lang={lang} />
+            <AgvaanQuiz lang={lang} soundEnabled={soundEnabled} />
           </section>
 
           {/* GUESTBOOK / COMM CHANNEL PORT (Persistent memory and automatic responses) */}

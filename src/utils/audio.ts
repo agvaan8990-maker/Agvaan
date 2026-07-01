@@ -132,6 +132,63 @@ class SoundEngine {
     osc.stop(this.ctx.currentTime + 0.25);
   }
 
+  // Play a beautiful "ding" sound on correct answer
+  playDing() {
+    this.init();
+    if (!this.ctx) return;
+
+    const now = this.ctx.currentTime;
+    const notes = [523.25, 659.25]; // C5 and E5 notes
+    notes.forEach((freq, idx) => {
+      if (!this.ctx) return;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+
+      gain.gain.setValueAtTime(0.08, now + idx * 0.08);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.25);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      osc.start(now + idx * 0.08);
+      osc.stop(now + idx * 0.08 + 0.3);
+    });
+  }
+
+  // Play a retro "buzz" sound on wrong answer
+  playBuzz() {
+    this.init();
+    if (!this.ctx) return;
+
+    const now = this.ctx.currentTime;
+    const osc1 = this.ctx.createOscillator();
+    const osc2 = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+
+    osc1.type = "sawtooth";
+    osc1.frequency.setValueAtTime(120, now);
+    osc1.frequency.linearRampToValueAtTime(80, now + 0.25);
+
+    osc2.type = "triangle";
+    osc2.frequency.setValueAtTime(125, now);
+    osc2.frequency.linearRampToValueAtTime(85, now + 0.25);
+
+    gain.gain.setValueAtTime(0.12, now);
+    gain.gain.linearRampToValueAtTime(0.01, now + 0.25);
+
+    osc1.connect(gain);
+    osc2.connect(gain);
+    gain.connect(this.ctx.destination);
+
+    osc1.start(now);
+    osc1.stop(now + 0.25);
+    osc2.start(now);
+    osc2.stop(now + 0.25);
+  }
+
   // Play a synthetic cosmic pad sequence (like a mini-BTS vibe)
   playCosmicTune() {
     this.init();

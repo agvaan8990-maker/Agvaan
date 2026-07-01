@@ -84,9 +84,10 @@ const QUIZ_QUESTIONS: QuizQuestion[] = [
 
 interface Props {
   lang: "mn" | "en";
+  soundEnabled?: boolean;
 }
 
-export function AgvaanQuiz({ lang }: Props) {
+export function AgvaanQuiz({ lang, soundEnabled = true }: Props) {
   const [currIdx, setCurrIdx] = useState<number>(0);
   const [selectedOpt, setSelectedOpt] = useState<number | null>(null);
   const [isAnswered, setIsAnswered] = useState<boolean>(false);
@@ -107,10 +108,10 @@ export function AgvaanQuiz({ lang }: Props) {
     setShowFact(true);
 
     if (selectedOpt === question.correctIdx) {
-      sound.playLaser();
+      if (soundEnabled) sound.playDing();
       setScore((prev) => prev + 1);
     } else {
-      sound.playFail();
+      if (soundEnabled) sound.playBuzz();
     }
   };
 
@@ -121,9 +122,9 @@ export function AgvaanQuiz({ lang }: Props) {
 
     if (currIdx < QUIZ_QUESTIONS.length - 1) {
       setCurrIdx((prev) => prev + 1);
-      sound.playBeep();
+      if (soundEnabled) sound.playBeep();
     } else {
-      sound.playLevelUp();
+      if (soundEnabled) sound.playLevelUp();
       setQuizFinished(true);
     }
   };
@@ -135,7 +136,7 @@ export function AgvaanQuiz({ lang }: Props) {
     setScore(0);
     setQuizFinished(false);
     setShowFact(false);
-    sound.playLevelUp();
+    if (soundEnabled) sound.playLevelUp();
   };
 
   return (
@@ -161,45 +162,85 @@ export function AgvaanQuiz({ lang }: Props) {
               </span>
             </div>
 
-            {/* Question Text */}
-            <h4 className="font-grotesk text-xl sm:text-2xl text-cream uppercase tracking-wide leading-tight mb-6">
-              {lang === "mn" ? question.questionMn : question.questionEn}
-            </h4>
+            {/* Slide Question transition container */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currIdx}
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
+                transition={{ duration: 0.35, ease: "easeInOut" }}
+                className="w-full"
+              >
+                {/* Question Text */}
+                <h4 className="font-grotesk text-xl sm:text-2xl text-cream uppercase tracking-wide leading-tight mb-6 min-h-[56px] flex items-center">
+                  {lang === "mn" ? question.questionMn : question.questionEn}
+                </h4>
 
-            {/* Options List Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-              {(lang === "mn" ? question.optionsMn : question.optionsEn).map((opt, idx) => {
-                let btnStyle = "border-white/10 hover:border-white/20 bg-white/[0.01]";
-                
-                if (isAnswered) {
-                  if (idx === question.correctIdx) {
-                    btnStyle = "bg-neon/15 border-neon text-neon";
-                  } else if (idx === selectedOpt) {
-                    btnStyle = "bg-red-500/15 border-red-500 text-red-400";
-                  } else {
-                    btnStyle = "opacity-45 border-white/5";
-                  }
-                } else if (selectedOpt === idx) {
-                  btnStyle = "border-neon bg-neon/5 text-neon shadow-sm shadow-neon/10";
-                }
+                {/* Options List Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+                  {(lang === "mn" ? question.optionsMn : question.optionsEn).map((opt, idx) => {
+                    const isSelected = selectedOpt === idx;
+                    const isCorrect = idx === question.correctIdx;
+                    const isWrongSelection = isAnswered && isSelected && !isCorrect;
 
-                return (
-                  <button
-                    key={idx}
-                    disabled={isAnswered}
-                    onClick={() => handleOptionSelect(idx)}
-                    className={`w-full text-left p-4 rounded-xl border font-mono text-xs sm:text-sm uppercase transition-all duration-300 relative cursor-pointer flex items-center justify-between ${btnStyle}`}
-                  >
-                    <span>{opt}</span>
-                    {isAnswered && idx === question.correctIdx && (
-                      <span className="text-neon text-[9px] font-bold py-0.5 px-1.5 bg-neon/15 rounded uppercase">
-                        {lang === "mn" ? "ЗӨВ" : "CORRECT"}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
+                    let btnStyle = "border-white/10 bg-white/[0.01] text-cream/80";
+                    
+                    if (isAnswered) {
+                      if (isCorrect) {
+                        btnStyle = "bg-green-500/20 border-green-500 text-green-400 font-bold shadow-[0_0_15px_rgba(34,197,94,0.3)]";
+                      } else if (isSelected) {
+                        btnStyle = "bg-red-500/20 border-red-500 text-red-400 font-bold shadow-[0_0_15px_rgba(239,68,68,0.3)]";
+                      } else {
+                        btnStyle = "opacity-45 border-white/5 text-cream/40";
+                      }
+                    } else if (isSelected) {
+                      btnStyle = "border-[#6FFF00] bg-[#6FFF00]/10 text-[#6FFF00] shadow-sm shadow-[#6FFF00]/20 font-medium";
+                    }
+
+                    // Hover behavior: scale up slightly, glow, border highlight
+                    const hoverAnimation = !isAnswered ? {
+                      scale: 1.03,
+                      boxShadow: isSelected 
+                        ? "0 0 15px rgba(111, 255, 0, 0.35)" 
+                        : "0 0 12px rgba(255, 255, 255, 0.08)",
+                      borderColor: isSelected ? "#6FFF00" : "rgba(255, 255, 255, 0.35)",
+                      backgroundColor: isSelected ? "rgba(111, 255, 0, 0.15)" : "rgba(255, 255, 255, 0.03)"
+                    } : undefined;
+
+                    // Shake trigger on wrong answer confirmation
+                    const animateProp = isWrongSelection 
+                      ? { x: [0, -6, 6, -6, 6, -3, 3, 0] } 
+                      : {};
+
+                    return (
+                      <motion.button
+                        key={idx}
+                        disabled={isAnswered}
+                        onClick={() => handleOptionSelect(idx)}
+                        whileHover={hoverAnimation}
+                        whileTap={!isAnswered ? { scale: 0.98 } : undefined}
+                        animate={animateProp}
+                        transition={isWrongSelection ? { duration: 0.4, ease: "easeInOut" } : { duration: 0.2 }}
+                        className={`w-full text-left p-4 rounded-xl border font-mono text-xs sm:text-sm uppercase transition-all duration-300 relative cursor-pointer flex items-center justify-between ${btnStyle}`}
+                      >
+                        <span>{opt}</span>
+                        {isAnswered && isCorrect && (
+                          <span className="text-green-400 text-[9px] font-bold py-0.5 px-1.5 bg-green-500/20 rounded uppercase border border-green-500/30">
+                            {lang === "mn" ? "ЗӨВ" : "CORRECT"}
+                          </span>
+                        )}
+                        {isAnswered && isWrongSelection && (
+                          <span className="text-red-400 text-[9px] font-bold py-0.5 px-1.5 bg-red-500/20 rounded uppercase border border-red-500/30">
+                            {lang === "mn" ? "БУРУУ" : "WRONG"}
+                          </span>
+                        )}
+                      </motion.button>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            </AnimatePresence>
           </div>
 
           {/* Bottom helper explanation */}
